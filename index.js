@@ -87,7 +87,6 @@ const IndexPage = () => {
 
             return (
                 <div>
-                    Calc 0.11
                     <FoodInput
                         co2e={co2e}
                         onFoodChange={this.handleFoodChange} />
