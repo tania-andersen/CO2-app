@@ -70,7 +70,7 @@ const IndexPage = () => {
             super(props);
             this.handleFoodChange = this.handleFoodChange.bind(this);
             this.handleQuantityChange = this.handleQuantityChange.bind(this);
-            this.state = { co2e: '', temperature: '', scale: 'c' };
+            this.state = { co2e: '', quantity: '' };
         }
 
         handleFoodChange(co2eFactor) {
