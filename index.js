@@ -123,7 +123,6 @@ const IndexPage = () => {
   class Co2Line extends React.Component {
     constructor(props) {
       super(props)
-      // binding - skal forklares
       this.handleFoodChange = this.handleFoodChange.bind(this)
       this.handleQuantityChange = this.handleQuantityChange.bind(this)
       this.state = { co2e: '', quantity: '', items: 1 }
