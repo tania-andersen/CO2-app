@@ -1,3 +1,11 @@
+/*
+
+  CO2-calculator.
+  Author: Tania Andersen, tan AT ing DOT dk
+  License: The Unlicense, https://github.com/tania-andersen/CO2-app/blob/main/LICENSE
+
+*/
+
 import React from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -108,7 +116,7 @@ const IndexPage = () => {
       super(props)
       this.handleFoodChange = this.handleFoodChange.bind(this)
       this.handleQuantityChange = this.handleQuantityChange.bind(this)
-      this.handleRemoveItem = this.handleRemoveItem.bind(this)
+      this.delete = this.delete.bind(this)
       this.state = { foodItem: this.props.foodItem, quantity: this.props.quantity }
     }
 
@@ -121,14 +129,14 @@ const IndexPage = () => {
       this.props.onChange(this.state.foodItem, newQuantity, this.props.index)
     }
 
-    handleRemoveItem() {
+    delete() {
       this.props.onDelete(this.props.index)
     }
 
     render() {
-      const quantity = this.props.quantity 
+      const quantity = this.props.quantity
       const foodItem = this.props.foodItem
-      const food = foodItem.food
+      const food = foodItem.food // ?
       const co2e = foodItem.co2e
 
       return (
@@ -144,7 +152,7 @@ const IndexPage = () => {
           />
           &nbsp;
           <Co2eAmount co2e={co2e} quantity={quantity} />
-          <IconButton aria-label="delete" size="small" onClick={this.handleRemoveItem}>
+          <IconButton aria-label="delete" size="small" onClick={this.delete}>
             <DeleteIcon />
           </IconButton>
         </ListItem>
@@ -170,7 +178,7 @@ const IndexPage = () => {
         i == index ? { foodItem: newFoodItem, quantity: newQuantity } : item
       );
       // Opdater App state.
-      updateList(newList); 
+      updateList(newList);
     }
 
     const handleAddItem = (e) => {
