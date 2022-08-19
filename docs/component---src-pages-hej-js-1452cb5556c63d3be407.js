@@ -1,1 +1,0 @@
-(self.webpackChunkgatsby_material_typescript_starter=self.webpackChunkgatsby_material_typescript_starter||[]).push([[925],{6004:function(){}}]);
