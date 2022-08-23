@@ -1,14 +1,10 @@
 /*
-
   CO2-calculator.
   Author: Tania Andersen, tan AT ing DOT dk
   License: The Unlicense, https://github.com/tania-andersen/CO2-app/blob/main/LICENSE
-
 */
 
 import React from 'react'
-
-import { makeStyles } from '@material-ui/core/styles'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -25,22 +21,11 @@ import Box from '@material-ui/core/Box'
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}))
+import { Link } from "gatsby"
 
 const IndexPage = () => {
-  const classes = useStyles()
-  const [features, setFeatures] = React.useState(true)
-  const [info, setInfo] = React.useState(true)
 
   function Co2eAmount(props) {
     const amount = Math.round((props.co2e * props.quantity))
@@ -171,6 +156,9 @@ const IndexPage = () => {
     const handleRemoveItem = (index) => {
       const newList = list.filter((element, i) => index != i)
       updateList(newList)
+
+      // Gem sessionens tilstand.
+      sessionStorage.setItem("currentEntries", JSON.stringify(newList));
     };
 
     const handleUpdateItem = (newFoodItem, newQuantity, index) => {
@@ -179,13 +167,47 @@ const IndexPage = () => {
       );
       // Opdater App state.
       updateList(newList);
+      // Gem sessionens tilstand.
+      sessionStorage.setItem("currentEntries", JSON.stringify(newList));
     }
 
     const handleAddItem = (e) => {
-      updateList(list.concat({
+      var newList = list.concat({
         foodItem: foods[Math.floor(Math.random() * foods.length)], quantity: 100.0
-      }));
+      })
+      updateList(newList);
+      // Gem sessionens tilstand.
+      sessionStorage.setItem("currentEntries", JSON.stringify(newList));
     };
+
+    const handleSaveTotal = (e) => {
+      // savedEntriesAsJson = JSON.stringify([ { "2022-01-01 12:00", co2total } , { "2022-03-03 13:00", anotherCo2Total } ... ])
+      var savedEntriesAsJson
+      var savedEntries
+      if (typeof localStorage !== "undefined") { savedEntriesAsJson = localStorage.getItem("savedEntries") }
+      if (savedEntriesAsJson === null) {
+        savedEntries = new Array();
+      } else {
+        savedEntries = JSON.parse(savedEntriesAsJson)
+      }
+      var newEntry = { date: new Date(), co2e: co2eTotal }
+      savedEntries.push(newEntry)
+      savedEntriesAsJson = JSON.stringify(savedEntries)
+      if (typeof localStorage !== "undefined") { localStorage.setItem("savedEntries", savedEntriesAsJson) }
+    };
+
+    useEffect(() => {
+      console.log("useEffect i index henter data fra sessionStorage.");
+      var currentList = JSON.parse(sessionStorage.getItem("currentEntries"))
+      if (currentList !== null) {
+        updateList(currentList);
+      }
+    }, []);
+
+    useEffect(() => {
+      console.log("useEffect i index gemmer data i sessionStorage.");
+      window.sessionStorage.setItem("currentEntries", JSON.stringify(list));
+    }, [JSON.stringify(list)]);
 
     var co2eTotal = 0.0;
 
@@ -209,6 +231,12 @@ const IndexPage = () => {
             <Button variant="outlined" onClick={handleAddItem}>Tilføj fødevare</Button>
             &nbsp;
             <Box sx={{ fontWeight: 'bold', fontSize: 18 }}>Total: {co2eTotal.toFixed(1)} g</Box>
+          </ListItem>
+
+          <ListItem>
+            <Button variant="outlined" onClick={handleSaveTotal}>Gem total</Button>
+            &nbsp;
+            <Link to="/listview" style={{ textDecoration: 'none' }} ><Button variant="outlined">Se totaler</Button></Link>
           </ListItem>
         </List>
       </Box>
